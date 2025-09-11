@@ -35,16 +35,13 @@ public class AuthenticationService {
 
     @PersistenceContext
     private EntityManager entityManager;
-    @Value("${oauth.google.client.id}")
-    private String googleClientId;
-    @Value("${oauth.google.client.secret}")
-    private String googleClientSecret;
 
-    public AuthenticationService(AuthenticationUserRepository authenticationUserRepository, Encoder encoder, JsonWebToken jsonWebToken, EmailService emailService) {
+    public AuthenticationService(AuthenticationUserRepository authenticationUserRepository, Encoder encoder, JsonWebToken jsonWebToken, EmailService emailService,EntityManager  entityManager) {
         this.authenticationUserRepository = authenticationUserRepository;
         this.encoder = encoder;
         this.jsonWebToken = jsonWebToken;
         this.emailService = emailService;
+        this.entityManager = entityManager;
     }
 
     public static String generateEmailVerificationToken() {
@@ -136,17 +133,6 @@ public class AuthenticationService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found."));
     }
 
-    @Transactional
-    public void deleteUser(Long userId) {
-        AuthenticationUser user = entityManager.find(AuthenticationUser.class, userId);
-        if (user != null) {
-            entityManager.createNativeQuery("DELETE FROM posts_likes WHERE user_id = :userId")
-                    .setParameter("userId", userId)
-                    .executeUpdate();
-            entityManager.remove(user);
-        }
-    }
-
     public void sendPasswordResetToken(String email) {
         Optional<AuthenticationUser> user = authenticationUserRepository.findByEmail(email);
         if (user.isPresent()) {
@@ -184,6 +170,28 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Password reset token expired.");
         } else {
             throw new IllegalArgumentException("Password reset token failed.");
+        }
+    }
+
+    public AuthenticationUser updateUserProfile(Long userId, String firstName, String lastName, String company, String position, String location) {
+        AuthenticationUser user = authenticationUserRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        if (firstName != null) user.setFirstName(firstName);
+        if (lastName != null) user.setLastName(lastName);
+        if (company != null) user.setCompany(company);
+        if (position != null) user.setPosition(position);
+        if (location != null) user.setLocation(location);
+
+        return authenticationUserRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        AuthenticationUser user = entityManager.find(AuthenticationUser.class, userId);
+        if(user!=null){
+            entityManager.createNativeQuery("DELETE FROM posts_likes WHERE user_id = :userId")
+                            .setParameter("userId",userId)
+                                    .executeUpdate();
+            authenticationUserRepository.deleteById(userId);
         }
     }
 }

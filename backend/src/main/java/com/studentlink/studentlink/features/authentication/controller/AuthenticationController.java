@@ -7,7 +7,9 @@ import com.studentlink.studentlink.features.authentication.model.AuthenticationU
 import com.studentlink.studentlink.features.authentication.service.AuthenticationService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.UnsupportedEncodingException;
 
@@ -27,6 +29,12 @@ public class AuthenticationController {
     @PostMapping("/login")
     public AuthenticationResponseBody loginPage(@Valid @RequestBody AuthenticationRequestBody loginRequestBody){
         return authenticationService.login(loginRequestBody);
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteUser(@RequestAttribute("authenticatedUser") AuthenticationUser user){
+        authenticationService.deleteUser(user.getId());
+        return "User deleted successfully";
     }
 
 
@@ -58,5 +66,22 @@ public class AuthenticationController {
                                   @RequestParam String email) {
         authenticationService.resetPassword(email, newPassword, token);
         return "Password reset successfully.";
+    }
+
+    @PutMapping("/profile/{id}")
+    public AuthenticationUser updateUserProfile(
+            @RequestAttribute("authenticatedUser") AuthenticationUser user,
+            @PathVariable Long id,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String company,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) String location
+    ){
+        if(!user.getId().equals(id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"User does not have permission to update this profile.");
+        }
+
+        return authenticationService.updateUserProfile(id, firstName, lastName, company, position, location);
     }
 }
