@@ -1,9 +1,8 @@
 
 import { useNavigate } from 'react-router-dom';
 import Box from '../../components/Box/Box';
-import Button from '../../components/Button/Button';
-import Input from '../../components/Input/Input';
-import Layout from '../../components/Layout/Layout'
+import Button from '../../../../components/Button/Button';
+import Input from '../../../../components/Input/Input';
 import classes from "./Resetpassword.module.scss";
 import { useState } from 'react';
 export default function Resetpassword() {
@@ -63,7 +62,7 @@ export default function Resetpassword() {
     }
   };
   return (
-    <Layout className={classes.root}>
+    <div className={classes.root}>
 
       <Box>
         <h1>Reset Password</h1>
@@ -106,6 +105,6 @@ export default function Resetpassword() {
 
         }
       </Box>
-    </Layout>
+    </div>
   )
 }

@@ -1,10 +1,9 @@
 
 import { useState } from 'react';
 import Box from '../../components/Box/Box';
-import Input from '../../components/Input/Input';
-import Layout from '../../components/Layout/Layout'
+import Input from '../../../../components/Input/Input';
 import classes from "./VerifyEmail.module.scss";
-import Button from '../../components/Button/Button';
+import Button from '../../../../components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 export default function VerifyEmail() {
 
@@ -72,7 +71,7 @@ export default function VerifyEmail() {
   };
 
   return (
-    <Layout className={classes.root}>
+    <div className={classes.root}>
     <Box>
       <h1>Verify you email</h1>
       <form onSubmit={async (e)=>{
@@ -96,6 +95,6 @@ export default function VerifyEmail() {
         <Button type='button' disabled={isLoading} outline onClick={ ()=> {sendEmailVerificationToken()}}>Send again</Button>
       </form>
     </Box>
-    </Layout>
+    </div>
   )
 }

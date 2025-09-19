@@ -1,9 +1,8 @@
 import { useState, type FormEvent } from "react";
 import Box from "../../components/Box/Box";
-import Input from "../../components/Input/Input";
-import Layout from "../../components/Layout/Layout";
+import Input from "../../../../components/Input/Input";
 import classes from "./Login.module.scss";
-import Button from "../../components/Button/Button";
+import Button from "../../../../components/Button/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Seperator from "../../components/Seperator/Seperator";
 import { useAuthentication } from "../../contexts/AuthenticationContextProvider";
@@ -37,7 +36,7 @@ export default function Login() {
     
   };
   return (
-    <Layout className={classes.root}>
+    <div className={classes.root}>
       <Box>
         <h1>Sign in</h1>
         <p>Stay updated on your professional world.</p>
@@ -50,13 +49,13 @@ export default function Login() {
           <Button type="submit" disabled={isLoading}>
             {isLoading ? "..." : "Sign in"}
           </Button>
-          <Link to="/request-password-reset">Forgot password?</Link>
+          <Link to="/authentication/request-password-reset">Forgot password?</Link>
         </form>
         <Seperator>Or</Seperator>
         <div className={classes.register}>
-          New to StudentLink? <Link to="/signup">Join now</Link>
+          New to StudentLink? <Link to="/authentication/signup">Join now</Link>
         </div>
       </Box>
-    </Layout>
+    </div>
   );
 }
