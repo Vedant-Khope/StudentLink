@@ -1,5 +1,6 @@
 package com.studentlink.studentlink.features.feed.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.studentlink.studentlink.features.authentication.model.AuthenticationUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,11 +30,20 @@ public class Post {
 
     private LocalDateTime updatedDate;
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+    @JsonIgnore
     @OneToMany(
             mappedBy ="post",
             cascade = CascadeType.ALL, orphanRemoval = true
     )
     private List<Comment> comments;
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "posts_likes",
@@ -111,4 +121,5 @@ public class Post {
     public void setLikes(Set<AuthenticationUser> likes) {
         this.likes = likes;
     }
+
 }

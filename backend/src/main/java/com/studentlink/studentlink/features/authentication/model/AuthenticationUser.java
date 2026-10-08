@@ -4,6 +4,7 @@ package com.studentlink.studentlink.features.authentication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.studentlink.studentlink.features.feed.model.Post;
+import com.studentlink.studentlink.features.notifications.model.Notification;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -35,6 +36,13 @@ public class  AuthenticationUser {
     private String location=null;
     private Boolean profileComplete = false;
     private String profilePicture=null;
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> receivedNotifications;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> actedNotifications;
     @JsonIgnore
     @OneToMany(
             mappedBy = "author",
@@ -179,5 +187,21 @@ public class  AuthenticationUser {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<Notification> getReceivedNotifications() {
+        return receivedNotifications;
+    }
+
+    public void setReceivedNotifications(List<Notification> receivedNotifications) {
+        this.receivedNotifications = receivedNotifications;
+    }
+
+    public List<Notification> getActedNotifications() {
+        return actedNotifications;
+    }
+
+    public void setActedNotifications(List<Notification> actedNotifications) {
+        this.actedNotifications = actedNotifications;
     }
 }
